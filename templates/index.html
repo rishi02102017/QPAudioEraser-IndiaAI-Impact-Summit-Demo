@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QPAudioEraser — IndiaAI Impact Summit 2026</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+    <!-- ═══════════════════ HERO ═══════════════════ -->
+    <header class="hero">
+        <div class="hero-content">
+            <div class="event-badge">IndiaAI Impact Summit 2026</div>
+            <h1 class="hero-title">QPAudioEraser</h1>
+            <p class="hero-subtitle">
+                Quantum-Inspired Audio Unlearning for Privacy-Preserving Voice Biometrics
+            </p>
+            <div class="authors">
+                <span class="author-label">Demo presented by</span>
+                <div class="author-names">
+                    <span class="author">Shreyansh Pathak</span>
+                    <span class="dot">&middot;</span>
+                    <span class="author">Sonu Shrestha</span>
+                    <span class="dot">&middot;</span>
+                    <span class="author">Richa Singh</span>
+                    <span class="dot">&middot;</span>
+                    <span class="author">Mayank Vatsa</span>
+                </div>
+            </div>
+            <div class="affiliation">
+                IAB Lab, Indian Institute of Technology Jodhpur
+            </div>
+            <div class="hero-actions">
+                <a href="/paper" target="_blank" class="btn btn-outline">
+                    <i class="fas fa-file-pdf"></i>&ensp;Research Paper
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ═══════════════════ PIPELINE OVERVIEW ═══════════════════ -->
+    <section class="pipeline-overview">
+        <div class="container">
+            <h2 class="section-label">QPAudioEraser &mdash; Four-Phase Unlearning Pipeline</h2>
+            <div class="pipeline-steps">
+                <div class="pipe-step">
+                    <div class="pipe-num">1</div>
+                    <h4>Phase 1</h4>
+                    <p>Destructive Interference<br>Weight Initialization</p>
+                </div>
+                <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="pipe-step">
+                    <div class="pipe-num">2</div>
+                    <h4>Phase 2</h4>
+                    <p>Superposition-Based<br>Label Transformation</p>
+                </div>
+                <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="pipe-step">
+                    <div class="pipe-num">3</div>
+                    <h4>Phase 3</h4>
+                    <p>Uncertainty-Maximizing<br>Quantum Loss</p>
+                </div>
+                <div class="pipe-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="pipe-step">
+                    <div class="pipe-num">4</div>
+                    <h4>Phase 4</h4>
+                    <p>Entanglement-Inspired<br>Weight Mixing</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════ TAB BAR ═══════════════════ -->
+    <nav class="tab-bar" id="tabBar">
+        <div class="container">
+            <div class="tab-list">
+                <button class="tab-btn active" data-tab="tab-samples">
+                    <i class="fas fa-headphones"></i>&ensp;Speaker Audio Samples
+                </button>
+                <button class="tab-btn" data-tab="tab-train">
+                    <i class="fas fa-cogs"></i>&ensp;Train Audio Model
+                </button>
+                <button class="tab-btn disabled" data-tab="tab-unlearn" id="tabUnlearnBtn">
+                    <i class="fas fa-eraser"></i>&ensp;Unlearn Speaker
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══════════════ TAB 1 — SPEAKER AUDIO SAMPLES ═══════════════ -->
+    <section class="tab-content active" id="tab-samples">
+        <div class="container">
+            <h2 class="section-title">Speaker Audio Samples</h2>
+            <p class="section-desc">
+                Voice-prints collected across 10 prominent speakers. Click the play button to listen to each speaker's audio sample.
+            </p>
+            <div class="speaker-grid" id="speakerGrid">
+                <!-- JS injects speaker cards with audio players -->
+            </div>
+            <div class="dataset-summary" id="datasetSummary">
+                <!-- JS injects summary stats -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ TAB 2 — TRAIN AUDIO MODEL ═══════════════ -->
+    <section class="tab-content" id="tab-train">
+        <div class="container">
+            <h2 class="section-title">Train Audio Model on Speaker Samples</h2>
+            <p class="section-desc">
+                Fine-tuning a pretrained <strong>ResNet-18</strong> on mel-spectrogram representations
+                for 10-class speaker identification. Audio samples are converted to 128&times;128 spectrograms
+                at 16 kHz sample rate.
+            </p>
+
+            <div class="model-info-cards">
+                <div class="info-card">
+                    <div class="info-icon"><i class="fas fa-network-wired"></i></div>
+                    <div><div class="info-val">ResNet-18</div><div class="info-label">Architecture</div></div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon"><i class="fas fa-layer-group"></i></div>
+                    <div><div class="info-val">10 Epochs</div><div class="info-label">Training Duration</div></div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon"><i class="fas fa-users"></i></div>
+                    <div><div class="info-val">10 Classes</div><div class="info-label">Speakers</div></div>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon"><i class="fas fa-image"></i></div>
+                    <div><div class="info-val">128&times;128</div><div class="info-label">Spectrogram Input</div></div>
+                </div>
+            </div>
+
+            <div class="training-controls" id="trainingControls">
+                <button class="btn btn-primary btn-lg" id="btnStartTraining">
+                    <i class="fas fa-play"></i>&ensp;Start Training
+                </button>
+            </div>
+
+            <!-- training progress (hidden until training starts) -->
+            <div class="training-area hidden" id="trainingArea">
+                <div class="training-header">
+                    <div class="train-status" id="trainStatus">
+                        <i class="fas fa-spinner fa-spin"></i>&ensp;Training in progress&hellip;
+                    </div>
+                    <div class="epoch-counter" id="epochCounter">Epoch 0 / 10</div>
+                </div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar" id="trainProgress" style="width:0%"></div>
+                </div>
+
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <h4>Training Loss</h4>
+                        <canvas id="chartLoss"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h4>Training Accuracy</h4>
+                        <canvas id="chartAcc"></canvas>
+                    </div>
+                </div>
+
+                <div class="epoch-log-wrap">
+                    <h4><i class="fas fa-terminal"></i>&ensp;Training Log</h4>
+                    <div class="epoch-log" id="epochLog"></div>
+                </div>
+            </div>
+
+            <!-- training results (hidden until training completes) -->
+            <div class="training-results hidden" id="trainingResults">
+                <div class="result-banner" id="resultBanner"></div>
+                <div class="result-card full-width">
+                    <h4>Class-wise Speaker Accuracy</h4>
+                    <canvas id="chartClassAcc" height="100"></canvas>
+                </div>
+                <div class="result-card full-width mt-2">
+                    <h4>Detailed Per-Speaker Metrics</h4>
+                    <div class="table-wrap">
+                        <table class="data-table" id="classTable">
+                            <thead>
+                                <tr>
+                                    <th>Speaker</th>
+                                    <th>Samples</th>
+                                    <th>Duration</th>
+                                    <th>Accuracy</th>
+                                    <th>Precision</th>
+                                    <th>Recall</th>
+                                    <th>F1-Score</th>
+                                </tr>
+                            </thead>
+                            <tbody id="classTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ TAB 3 — UNLEARN SPEAKER ═══════════════ -->
+    <section class="tab-content" id="tab-unlearn">
+        <div class="container">
+            <h2 class="section-title">QPAudioEraser &mdash; Unlearn a Speaker</h2>
+            <p class="section-desc">
+                Which speaker do you want the model to <strong>unlearn</strong>?
+                Select a speaker below. The model will erase all discriminative information for that speaker
+                while preserving recognition accuracy for all others.
+            </p>
+
+            <!-- speaker selection grid -->
+            <div class="forget-grid" id="forgetGrid">
+                <!-- JS injects -->
+            </div>
+
+            <!-- selected speaker data statistics (before unlearning) -->
+            <div class="speaker-stats-panel hidden" id="speakerStatsPanel">
+                <h3 class="panel-title">
+                    Data Statistics &mdash; <span id="statsName"></span> (Before Unlearning)
+                </h3>
+                <div class="stats-grid" id="statsGrid">
+                    <!-- JS fills -->
+                </div>
+                <div class="audio-player-wrap mt-2">
+                    <div class="speaker-label" id="preLabel"></div>
+                    <audio id="preAudio" controls></audio>
+                </div>
+                <div class="prediction-result" id="preResult">
+                    <!-- JS fills: pre-unlearning prediction -->
+                </div>
+                <div class="text-center mt-2">
+                    <button class="btn btn-danger btn-lg" id="btnApplyUnlearn">
+                        <i class="fas fa-eraser"></i>&ensp;Apply QPAudioEraser
+                    </button>
+                </div>
+            </div>
+
+            <!-- unlearning process (4 phases with progress bars) -->
+            <div class="unlearn-process hidden" id="unlearnProcess">
+                <h3 class="panel-title">
+                    <i class="fas fa-cog fa-spin"></i>&ensp;Applying QPAudioEraser Algorithm
+                </h3>
+                <div class="phase-list">
+                    <div class="phase-item" id="phase1">
+                        <div class="phase-header">
+                            <span class="phase-num">Step 1</span>
+                            <span class="phase-name">Destructive Interference Weight Initialization</span>
+                            <span class="phase-status" id="phase1Status">Pending</span>
+                        </div>
+                        <div class="phase-detail">
+                            W&#x0303;<sub>F</sub> = W<sub>F</sub> &middot; cos(&phi;) / &radic;2 &emsp;|&emsp; b&#x0303;<sub>F</sub> = b<sub>F</sub> &middot; cos(&phi;)
+                        </div>
+                        <div class="progress-bar-wrap small">
+                            <div class="progress-bar phase-bar" id="phase1Bar" style="width:0%"></div>
+                        </div>
+                    </div>
+                    <div class="phase-item" id="phase2">
+                        <div class="phase-header">
+                            <span class="phase-num">Step 2</span>
+                            <span class="phase-name">Superposition-Based Label Transformation</span>
+                            <span class="phase-status" id="phase2Status">Pending</span>
+                        </div>
+                        <div class="phase-detail">
+                            y&#x0303; = [1/K, 1/K, &hellip;, 1/K] &ensp; for all y = c<sub>F</sub>
+                        </div>
+                        <div class="progress-bar-wrap small">
+                            <div class="progress-bar phase-bar" id="phase2Bar" style="width:0%"></div>
+                        </div>
+                    </div>
+                    <div class="phase-item" id="phase3">
+                        <div class="phase-header">
+                            <span class="phase-num">Step 3</span>
+                            <span class="phase-name">Uncertainty-Maximizing Quantum Loss Optimization</span>
+                            <span class="phase-status" id="phase3Status">Pending</span>
+                        </div>
+                        <div class="phase-detail">
+                            L<sub>quantum</sub> = I[y&ne;c<sub>F</sub>] &middot; L<sub>CE</sub>(y&#x0302;,y) + &lambda; &middot; I[y=c<sub>F</sub>] &middot; H(y&#x0302;)
+                        </div>
+                        <div class="progress-bar-wrap small">
+                            <div class="progress-bar phase-bar" id="phase3Bar" style="width:0%"></div>
+                        </div>
+                    </div>
+                    <div class="phase-item" id="phase4">
+                        <div class="phase-header">
+                            <span class="phase-num">Step 4</span>
+                            <span class="phase-name">Entanglement-Inspired Weight Mixing</span>
+                            <span class="phase-status" id="phase4Status">Pending</span>
+                        </div>
+                        <div class="phase-detail">
+                            W<sub>final</sub> = W&#x0303; &middot; M &emsp;|&emsp; &alpha; = 0.3
+                        </div>
+                        <div class="progress-bar-wrap small">
+                            <div class="progress-bar phase-bar" id="phase4Bar" style="width:0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="unlearn-timer" id="unlearnTimer">Elapsed: 0.0 s</div>
+            </div>
+
+            <!-- unlearning results (after unlearning completes) -->
+            <div class="unlearn-results hidden" id="unlearnResults">
+                <!-- success banner -->
+                <div class="success-banner" id="successBanner">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="successMsg"></span>
+                </div>
+
+                <!-- before vs after comparison -->
+                <h3 class="panel-title mt-2">Before vs After Unlearning</h3>
+                <div class="comparison-cards" id="comparisonCards"></div>
+
+                <!-- post-unlearning audio test -->
+                <div class="prediction-panel post mt-2">
+                    <h3 class="panel-title">Post-Unlearning Audio Test</h3>
+                    <div class="audio-player-wrap">
+                        <div class="speaker-label" id="postLabel"></div>
+                        <audio id="postAudio" controls></audio>
+                    </div>
+                    <div class="prediction-result" id="postResult"></div>
+                </div>
+
+                <!-- retained speaker accuracy table -->
+                <div class="result-card full-width mt-2">
+                    <h4>Retained Speaker Accuracy (Post-Unlearning)</h4>
+                    <div class="table-wrap">
+                        <table class="data-table" id="retainTable">
+                            <thead>
+                                <tr>
+                                    <th>Speaker</th>
+                                    <th>Pre-Unlearning Acc.</th>
+                                    <th>Post-Unlearning Acc.</th>
+                                    <th>&Delta; Change</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="retainTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- metrics summary -->
+                <div class="result-card full-width mt-2">
+                    <h4>Unlearning Metrics Summary</h4>
+                    <div class="metrics-row" id="metricsRow"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════ FOOTER ═══════════════════ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <div class="footer-logo">QPAudioEraser</div>
+                    <p>Quantum-Inspired Audio Unlearning for Privacy-Preserving Voice Biometrics</p>
+                </div>
+                <div class="footer-right">
+                    <div class="footer-authors">
+                        <h4>Research Team</h4>
+                        <p>Shreyansh Pathak &ensp;&middot;&ensp; Sonu Shrestha</p>
+                        <p>Prof. Richa Singh &ensp;&middot;&ensp; Prof. Mayank Vatsa</p>
+                    </div>
+                    <div class="footer-affiliation">
+                        <h4>Affiliation</h4>
+                        <p>IAB Lab</p>
+                        <p>Indian Institute of Technology Jodhpur</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 IAB Lab, IIT Jodhpur &ensp;&middot;&ensp; IndiaAI Impact Summit 2026</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
