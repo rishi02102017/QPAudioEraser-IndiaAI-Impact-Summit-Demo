@@ -146,15 +146,7 @@ function renderSpeakers() {
     </div>
   `).join("");
 
-  const totalSamples = SPEAKERS.reduce((a,s) => a + s.samples, 0);
-  const totalMin = SPEAKERS.reduce((a,s) => a + parseFloat(s.dur), 0).toFixed(1);
-  $("#datasetSummary").innerHTML = `
-    <div class="stat-card"><div class="stat-value">${SPEAKERS.length}</div><div class="stat-label">Speakers</div></div>
-    <div class="stat-card"><div class="stat-value">${totalSamples.toLocaleString()}</div><div class="stat-label">Total Samples</div></div>
-    <div class="stat-card"><div class="stat-value">${totalMin} min</div><div class="stat-label">Total Audio</div></div>
-    <div class="stat-card"><div class="stat-value">128&times;128</div><div class="stat-label">Spectrogram Size</div></div>
-    <div class="stat-card"><div class="stat-value">16 kHz</div><div class="stat-label">Sample Rate</div></div>
-  `;
+  // dataset summary removed as per guidance
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -392,7 +384,6 @@ function renderPrediction(containerId, speakerId, isCorrect) {
       <div class="pred-row">
         <div class="pred-label">${c.name}</div>
         <div class="pred-bar-bg"><div class="pred-bar ${barClass}" style="width:${c.conf.toFixed(1)}%"></div></div>
-        <div class="pred-pct">${c.conf.toFixed(1)}%</div>
       </div>`;
   }).join("");
 
