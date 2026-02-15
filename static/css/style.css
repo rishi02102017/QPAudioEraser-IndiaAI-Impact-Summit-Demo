@@ -238,16 +238,70 @@ body {
 .info-val { font-weight: 700; font-size: .9rem; color: var(--text); }
 .info-label { color: var(--text-muted); font-size: .72rem; }
 
+/* ── Load Model Section ───────────────────────────────── */
+.load-model-section { text-align: center; margin-bottom: 1.5rem; }
+.load-model-card {
+    background: var(--bg-card); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 2.5rem 2rem;
+    max-width: 540px; margin: 0 auto;
+    box-shadow: var(--shadow); transition: var(--transition);
+}
+.load-model-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); }
+.load-model-icon {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--primary));
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; margin: 0 auto 1.2rem;
+}
+.load-model-card h3 { font-size: 1.15rem; color: var(--text); margin-bottom: .5rem; }
+.load-model-desc {
+    color: var(--text-muted); font-size: .88rem; max-width: 420px;
+    margin: 0 auto 1.2rem; line-height: 1.5;
+}
+.load-model-meta {
+    display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+    margin-bottom: 1.5rem; font-size: .78rem; color: var(--green); font-weight: 600;
+}
+.load-model-meta span { display: inline-flex; align-items: center; gap: 4px; }
+
+/* ── Model Loading Animation ─────────────────────────── */
+.model-loading-area {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 2rem;
+    margin-bottom: 1.5rem; box-shadow: var(--shadow); animation: fadeIn .4s ease;
+}
+.loading-spinner-wrap {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 14px; margin-bottom: 1.2rem;
+}
+.loading-spinner {
+    width: 48px; height: 48px; border: 4px solid #e8ecf2;
+    border-top-color: var(--accent); border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text {
+    font-size: .9rem; font-weight: 600; color: var(--accent);
+    font-family: var(--mono);
+}
+.loading-steps {
+    font-family: var(--mono); font-size: .75rem;
+    max-height: 200px; overflow-y: auto; color: var(--text); line-height: 2;
+    margin-top: 1rem;
+}
+.load-step-line {
+    padding: 3px 0; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+}
+.load-step-line:last-child { border: none; }
+
 /* ── Training ──────────────────────────────────────────── */
-.training-controls { text-align: center; margin-bottom: 1.5rem; }
-.training-area, .training-results { animation: fadeIn .4s ease; }
+.training-results { animation: fadeIn .4s ease; }
 
 .training-header {
     display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 10px; flex-wrap: wrap; gap: 10px;
 }
-.train-status { font-weight: 600; color: var(--accent); font-size: .9rem; }
-.epoch-counter { font-family: var(--mono); color: var(--text-muted); font-size: .85rem; }
 
 .progress-bar-wrap {
     background: #e8ecf2; border-radius: 999px; height: 10px;

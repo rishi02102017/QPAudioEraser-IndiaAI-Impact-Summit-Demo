@@ -205,7 +205,7 @@ If you use this work in your research, please cite:
 
 ## Acknowledgements
 
-The interactive web demonstration was designed and developed by **Jyotishman Das**, IAB Lab, IIT Jodhpur.
+The interactive web demonstration was designed and developed by IAB Lab, IIT Jodhpur.
 
 ---
 

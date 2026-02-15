@@ -83,7 +83,7 @@
                     <i class="fas fa-headphones"></i>&ensp;Speaker Audio Samples
                 </button>
                 <button class="tab-btn" data-tab="tab-train">
-                    <i class="fas fa-cogs"></i>&ensp;Train Audio Model
+                    <i class="fas fa-download"></i>&ensp;Load Audio Model
                 </button>
                 <button class="tab-btn disabled" data-tab="tab-unlearn" id="tabUnlearnBtn">
                     <i class="fas fa-eraser"></i>&ensp;Unlearn Speaker
@@ -105,14 +105,13 @@
         </div>
     </section>
 
-    <!-- ═══════════════ TAB 2 — TRAIN AUDIO MODEL ═══════════════ -->
+    <!-- ═══════════════ TAB 2 — LOAD AUDIO MODEL ═══════════════ -->
     <section class="tab-content" id="tab-train">
         <div class="container">
-            <h2 class="section-title">Train Audio Model on Speaker Samples</h2>
+            <h2 class="section-title">Load Pretrained Audio Model</h2>
             <p class="section-desc">
-                Fine-tuning a pretrained <strong>ResNet-18</strong> on mel-spectrogram representations
-                for 10-class speaker identification. Audio samples are converted to 128&times;128 spectrograms
-                at 16 kHz sample rate.
+                Load a pretrained <strong>ResNet-18</strong> speaker identification model trained on
+                128&times;128 mel-spectrogram representations for 10-class classification at 16 kHz sample rate.
             </p>
 
             <div class="model-info-cards">
@@ -121,8 +120,8 @@
                     <div><div class="info-val">ResNet-18</div><div class="info-label">Architecture</div></div>
                 </div>
                 <div class="info-card">
-                    <div class="info-icon"><i class="fas fa-layer-group"></i></div>
-                    <div><div class="info-val">10 Epochs</div><div class="info-label">Training Duration</div></div>
+                    <div class="info-icon"><i class="fas fa-database"></i></div>
+                    <div><div class="info-val">2,706 Samples</div><div class="info-label">Training Data</div></div>
                 </div>
                 <div class="info-card">
                     <div class="info-icon"><i class="fas fa-users"></i></div>
@@ -134,42 +133,40 @@
                 </div>
             </div>
 
-            <div class="training-controls" id="trainingControls">
-                <button class="btn btn-primary btn-lg" id="btnStartTraining">
-                    <i class="fas fa-play"></i>&ensp;Start Training
-                </button>
+            <div class="load-model-section" id="loadModelSection">
+                <div class="load-model-card">
+                    <div class="load-model-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Speaker Identification Model</h3>
+                    <p class="load-model-desc">
+                        Pretrained ResNet-18 fine-tuned on 10 speakers with 98.4% accuracy.
+                        Model weights: 11.2M parameters.
+                    </p>
+                    <div class="load-model-meta">
+                        <span><i class="fas fa-check-circle"></i>&ensp;10 Epochs</span>
+                        <span><i class="fas fa-check-circle"></i>&ensp;98.4% Accuracy</span>
+                        <span><i class="fas fa-check-circle"></i>&ensp;Cross-Entropy Loss</span>
+                    </div>
+                    <button class="btn btn-primary btn-lg" id="btnLoadModel">
+                        <i class="fas fa-download"></i>&ensp;Load Audio Model
+                    </button>
+                </div>
             </div>
 
-            <!-- training progress (hidden until training starts) -->
-            <div class="training-area hidden" id="trainingArea">
-                <div class="training-header">
-                    <div class="train-status" id="trainStatus">
-                        <i class="fas fa-spinner fa-spin"></i>&ensp;Training in progress&hellip;
-                    </div>
-                    <div class="epoch-counter" id="epochCounter">Epoch 0 / 10</div>
+            <!-- loading progress (hidden until load starts) -->
+            <div class="model-loading-area hidden" id="modelLoadingArea">
+                <div class="loading-spinner-wrap">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text" id="loadingText">Initializing model architecture...</div>
                 </div>
                 <div class="progress-bar-wrap">
-                    <div class="progress-bar" id="trainProgress" style="width:0%"></div>
+                    <div class="progress-bar" id="loadProgress" style="width:0%"></div>
                 </div>
-
-                <div class="charts-row">
-                    <div class="chart-card">
-                        <h4>Training Loss</h4>
-                        <canvas id="chartLoss"></canvas>
-                    </div>
-                    <div class="chart-card">
-                        <h4>Training Accuracy</h4>
-                        <canvas id="chartAcc"></canvas>
-                    </div>
-                </div>
-
-                <div class="epoch-log-wrap">
-                    <h4><i class="fas fa-terminal"></i>&ensp;Training Log</h4>
-                    <div class="epoch-log" id="epochLog"></div>
-                </div>
+                <div class="loading-steps" id="loadingSteps"></div>
             </div>
 
-            <!-- training results (hidden until training completes) -->
+            <!-- model loaded results (hidden until load completes) -->
             <div class="training-results hidden" id="trainingResults">
                 <div class="result-banner" id="resultBanner"></div>
                 <div class="result-card full-width">

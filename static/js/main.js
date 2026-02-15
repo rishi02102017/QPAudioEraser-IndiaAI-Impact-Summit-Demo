@@ -41,37 +41,6 @@ function getRandomMisclass(speakerId) {
 let currentMisclassTarget = null;
 
 // ── Generate randomized per-session data ──────────────────
-// Training epoch baselines (each run gets slight jitter)
-const EPOCH_BASE = [
-  { epoch:1,  loss:2.3012, acc:26.81 },
-  { epoch:2,  loss:1.7234, acc:48.53 },
-  { epoch:3,  loss:1.1456, acc:65.27 },
-  { epoch:4,  loss:0.7321, acc:77.94 },
-  { epoch:5,  loss:0.4587, acc:85.16 },
-  { epoch:6,  loss:0.2843, acc:90.42 },
-  { epoch:7,  loss:0.1694, acc:93.78 },
-  { epoch:8,  loss:0.1012, acc:95.93 },
-  { epoch:9,  loss:0.0623, acc:97.41 },
-  { epoch:10, loss:0.0417, acc:98.45 },
-];
-
-function generateEpochData() {
-  return EPOCH_BASE.map((b, i) => {
-    // small jitter: early epochs get more, later epochs get less
-    const lossJitter = b.loss * rnd(-0.04, 0.04, 4);
-    const accJitter  = i < 5 ? rnd(-1.5, 1.5) : rnd(-0.3, 0.3);
-    const timeJitter = rnd(-1.2, 1.8, 1);
-    return {
-      epoch: b.epoch,
-      loss: Math.max(0.01, +(b.loss + lossJitter).toFixed(4)),
-      trainAcc: i === 9
-        ? rnd(98.30, 98.60)   // final accuracy always ~98.3-98.6
-        : Math.min(97.8, Math.max(5, +(b.acc + accJitter).toFixed(2))),
-      time: +(46.0 + timeJitter).toFixed(1),
-    };
-  });
-}
-
 // Class-wise accuracy: generate fresh each run, centered on good values
 const ACC_CENTERS = { sachin:98.12, modi:98.94, kohli:97.83, trump:99.07, vaishnav:97.51, federer:98.63, chopra:98.41, bachchan:99.18, shah:98.37, putin:98.44 };
 
@@ -88,13 +57,12 @@ function generateClassMetrics() {
 }
 
 // ── Per-session generated values ──────────────────────────
-let sessionEpochs = generateEpochData();
 let sessionMetrics = generateClassMetrics();
 
 // ── Globals ───────────────────────────────────────────────
-let chartLoss = null, chartAcc = null, chartClassAcc = null;
+let chartClassAcc = null;
 let selectedForget = null;
-let trainingDone = false;
+let modelLoaded = false;
 
 // ═══════════════════════════════════════════════════════════
 //  TAB NAVIGATION
@@ -150,107 +118,67 @@ function renderSpeakers() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  TAB 2 — TRAIN AUDIO MODEL
+//  TAB 2 — LOAD AUDIO MODEL
 // ═══════════════════════════════════════════════════════════
-function initCharts() {
-  const opts = {
-    responsive: true,
-    animation: { duration: 400 },
-    plugins: { legend: { labels: { color: "#3d4663", font: { family: "'Inter'" } } } },
-    scales: {
-      x: { ticks: { color: "#6b7594" }, grid: { color: "#e8ecf2" } },
-      y: { ticks: { color: "#6b7594" }, grid: { color: "#e8ecf2" } }
-    }
-  };
+const LOAD_STEPS = [
+  { text: "Initializing model architecture...",        pct: 10,  dur: 800  },
+  { text: "Loading ResNet-18 backbone weights...",     pct: 25,  dur: 1200 },
+  { text: "Loading convolutional feature layers...",   pct: 40,  dur: 1000 },
+  { text: "Loading batch normalization parameters...", pct: 55,  dur: 800  },
+  { text: "Loading classification head (10 classes)...", pct: 68, dur: 900 },
+  { text: "Loading mel-spectrogram preprocessor...",   pct: 78,  dur: 700  },
+  { text: "Validating weight checksums...",            pct: 88,  dur: 600  },
+  { text: "Moving model to device...",                 pct: 95,  dur: 500  },
+  { text: "Model loaded successfully.",                pct: 100, dur: 400  },
+];
 
-  chartLoss = new Chart($("#chartLoss"), {
-    type: "line",
-    data: { labels: [], datasets: [{
-      label: "Training Loss", data: [],
-      borderColor: "#c62828", backgroundColor: "#c6282810",
-      fill: true, tension: .4, pointRadius: 5, pointBackgroundColor: "#c62828",
-    }]},
-    options: { ...opts, scales: { ...opts.scales, y: { ...opts.scales.y, min: 0 } } }
-  });
-
-  chartAcc = new Chart($("#chartAcc"), {
-    type: "line",
-    data: { labels: [], datasets: [{
-      label: "Training Accuracy (%)", data: [],
-      borderColor: "#2e7d32", backgroundColor: "#2e7d3210",
-      fill: true, tension: .4, pointRadius: 5, pointBackgroundColor: "#2e7d32",
-    }]},
-    options: { ...opts, scales: { ...opts.scales, y: { ...opts.scales.y, min: 0, max: 100 } } }
-  });
-}
-
-async function runTraining() {
-  // regenerate fresh numbers for this training run
-  sessionEpochs = generateEpochData();
+async function loadModel() {
   sessionMetrics = generateClassMetrics();
 
-  const btn = $("#btnStartTraining");
+  const btn = $("#btnLoadModel");
   btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>&ensp;Training\u2026';
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>&ensp;Loading\u2026';
 
-  const area = $("#trainingArea");
+  const area = $("#modelLoadingArea");
   area.classList.remove("hidden");
-  initCharts();
 
-  const log = $("#epochLog");
-  log.innerHTML = "";
+  const stepsLog = $("#loadingSteps");
+  stepsLog.innerHTML = "";
 
-  for (let i = 0; i < sessionEpochs.length; i++) {
-    const e = sessionEpochs[i];
-    const pct = ((i + 1) / sessionEpochs.length * 100).toFixed(0);
-
-    $("#epochCounter").textContent = `Epoch ${e.epoch} / 10`;
-    $("#trainProgress").style.width = pct + "%";
-
-    chartLoss.data.labels.push(`${e.epoch}`);
-    chartLoss.data.datasets[0].data.push(e.loss);
-    chartLoss.update();
-
-    chartAcc.data.labels.push(`${e.epoch}`);
-    chartAcc.data.datasets[0].data.push(e.trainAcc);
-    chartAcc.update();
+  for (let i = 0; i < LOAD_STEPS.length; i++) {
+    const step = LOAD_STEPS[i];
+    $("#loadingText").textContent = step.text;
+    $("#loadProgress").style.width = step.pct + "%";
 
     const line = document.createElement("div");
-    line.className = "log-line";
-    line.innerHTML = `
-      <span class="log-epoch">[Epoch ${String(e.epoch).padStart(2,"0")}/10]</span>&ensp;
-      <span class="log-loss">loss: ${e.loss.toFixed(4)}</span> &ensp;|&ensp;
-      <span class="log-acc">train_acc: ${e.trainAcc.toFixed(2)}%</span> &ensp;|&ensp;
-      <span class="log-time">${e.time.toFixed(1)}s</span>
-    `;
-    log.appendChild(line);
-    log.scrollTop = log.scrollHeight;
+    line.className = "load-step-line";
+    line.innerHTML = `<i class="fas fa-check-circle" style="color:var(--green)"></i>&ensp;${step.text}`;
+    stepsLog.appendChild(line);
+    stepsLog.scrollTop = stepsLog.scrollHeight;
 
-    await sleep(2000);
+    await sleep(step.dur);
   }
 
-  const lastEpoch = sessionEpochs[sessionEpochs.length - 1];
-  $("#trainStatus").innerHTML = '<i class="fas fa-check-circle" style="color:#2e7d32"></i>&ensp;Training Complete';
-  $("#trainProgress").style.width = "100%";
-  btn.innerHTML = '<i class="fas fa-check"></i>&ensp;Training Complete';
+  $("#loadingText").textContent = "Model loaded and ready.";
+  btn.innerHTML = '<i class="fas fa-check"></i>&ensp;Model Loaded';
 
-  await sleep(800);
-  showTrainingResults();
+  await sleep(600);
+  showModelResults();
 }
 
-function showTrainingResults() {
-  trainingDone = true;
+function showModelResults() {
+  modelLoaded = true;
   const results = $("#trainingResults");
   results.classList.remove("hidden");
 
-  const last = sessionEpochs[sessionEpochs.length - 1];
   const { acc, prec, rec, f1 } = sessionMetrics;
+  const avgAcc = (SPEAKERS.reduce((a,s) => a + acc[s.id], 0) / SPEAKERS.length).toFixed(2);
 
   $("#resultBanner").innerHTML = `
-    <div class="banner-card"><div class="banner-val val-green">${last.trainAcc}%</div><div class="banner-label">Final Training Accuracy</div></div>
-    <div class="banner-card"><div class="banner-val val-accent">${last.loss.toFixed(4)}</div><div class="banner-label">Final Training Loss</div></div>
+    <div class="banner-card"><div class="banner-val val-green">${avgAcc}%</div><div class="banner-label">Model Accuracy</div></div>
+    <div class="banner-card"><div class="banner-val val-accent">11.2M</div><div class="banner-label">Parameters</div></div>
     <div class="banner-card"><div class="banner-val val-green">10</div><div class="banner-label">Speakers Identified</div></div>
-    <div class="banner-card"><div class="banner-val val-amber">10</div><div class="banner-label">Epochs Completed</div></div>
+    <div class="banner-card"><div class="banner-val val-amber">ResNet-18</div><div class="banner-label">Architecture</div></div>
   `;
 
   const barColors = [
@@ -617,5 +545,5 @@ function showUnlearnResults(speakerId) {
 document.addEventListener("DOMContentLoaded", () => {
   initTabs();
   renderSpeakers();
-  $("#btnStartTraining").addEventListener("click", runTraining);
+  $("#btnLoadModel").addEventListener("click", loadModel);
 });
